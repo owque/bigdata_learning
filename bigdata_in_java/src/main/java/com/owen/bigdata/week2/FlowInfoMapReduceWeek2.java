@@ -1,4 +1,4 @@
-package com.owen.bigdata;
+package com.owen.bigdata.week2;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;

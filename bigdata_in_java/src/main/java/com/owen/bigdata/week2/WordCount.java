@@ -1,4 +1,4 @@
-package com.owen.bigdata;
+package com.owen.bigdata.week2;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
