@@ -20,6 +20,11 @@ import java.util.stream.Collectors;
 public class FlowInfoMapReduceWeek2 {
 
     public static class FlowInfoArrayWrite extends ArrayWritable {
+
+        public FlowInfoArrayWrite() {
+            super(IntWritable.class);
+        }
+
         public FlowInfoArrayWrite(int[] ints) {
             super(IntWritable.class);
             IntWritable[] intWritable = new IntWritable[ints.length];
