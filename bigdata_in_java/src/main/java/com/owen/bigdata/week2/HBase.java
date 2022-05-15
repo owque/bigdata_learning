@@ -46,7 +46,7 @@ public class HBase {
         conn.getTable(tableName).put(put);
 
         Put put1 = new Put(Bytes.toBytes("Que Zhongqing"));
-        put1.addColumn(Bytes.toBytes("info"), Bytes.toBytes("student_id"), Bytes.toBytes("G20220735030074"));
+        put1.addColumn(Bytes.toBytes("info"), Bytes.toBytes("student_id"), Bytes.toBytes("G20220735030073"));
         conn.getTable(tableName).put(put1);
 
         //Query
