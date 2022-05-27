@@ -120,6 +120,7 @@ order by avgrate desc
 
 --?????????????????????第三题，没想通，下面的写法出来的结果为什么不对，
 --去掉`group by y.MovieName`电影还是对的，加上之后变成的其他的电影。
+--测试下来，只要使用聚合函数就不对，比如 distinct，collect_set
 with t1 as(
 select a.UserID, count(1) cnt
 from t_rating a
@@ -149,3 +150,85 @@ group by y.MovieName
 --City of Lost Children, The (1995)	4.062034739454094
 --Roger & Me (1989)	4.0739348370927315
 --Waiting for Guffman (1996)	4.147186147186147
+
+-- 去掉group by
+with t1 as(
+select a.UserID, count(1) cnt
+from t_rating a
+join t_user b on a.UserID = b.UserID
+where b.Sex='F'
+group by a.UserID
+sort by cnt desc limit 1
+),
+t2 as(
+select aaa.MovieID,aaa.rate from t_rating aaa
+where aaa.UserID in(select UserID from t1)
+sort by rate desc limit 10
+)
+select y.MovieName from t_rating x
+join t_movie y on y.MovieID=x.MovieID
+where x.MovieID in(select t2.MovieID from t2)
+
+--result:
+--Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963)
+--Crying Game, The (1992)
+--Being John Malkovich (1999)
+--Crying Game, The (1992)
+--Crying Game, The (1992)
+--Close Shave, A (1995)
+--Crying Game, The (1992)
+--Trust (1990)
+--Being John Malkovich (1999)
+--Being John Malkovich (1999)
+--Being John Malkovich (1999)
+--It Happened One Night (1934)
+--Being John Malkovich (1999)
+--Crying Game, The (1992)
+--Being John Malkovich (1999)
+--It Happened One Night (1934)
+--Duck Soup (1933)
+--Duck Soup (1933)
+--Being John Malkovich (1999)
+--Duck Soup (1933)
+--Being John Malkovich (1999)
+--Close Shave, A (1995)
+--Being John Malkovich (1999)
+--Duck Soup (1933)
+--Crying Game, The (1992)
+--Rear Window (1954)
+--It Happened One Night (1934)
+--Being John Malkovich (1999)
+--Being John Malkovich (1999)
+--Being John Malkovich (1999)
+--Close Shave, A (1995)
+--Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963)
+--Roger & Me (1989)
+--Rear Window (1954)
+--Being John Malkovich (1999)
+--Close Shave, A (1995)
+--Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963)
+--Crying Game, The (1992)
+--Roger & Me (1989)
+--Being John Malkovich (1999)
+--Roger & Me (1989)
+--Rear Window (1954)
+--Duck Soup (1933)
+--Being John Malkovich (1999)
+--Crying Game, The (1992)
+--Being John Malkovich (1999)
+--Close Shave, A (1995)
+--Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963)
+--Crying Game, The (1992)
+--Duck Soup (1933)
+--Night on Earth (1991)
+--Close Shave, A (1995)
+--Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963)
+--Crying Game, The (1992)
+--Being John Malkovich (1999)
+--Rear Window (1954)
+--Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963)
+--Being John Malkovich (1999)
+--Rear Window (1954)
+--It Happened One Night (1934)
+--Trust (1990)
+--Being John Malkovich (1999)
