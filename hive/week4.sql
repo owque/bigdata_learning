@@ -77,7 +77,7 @@ limit 10;
 --Paths of Glory (1957)	4.485148514851486	202
 --Wrong Trousers, The (1993)	4.478260869565218	644
 
-=======================test3======================================
+--=======================test3======================================
 --=====step1:
 select a.UserID, count(1) cnt
 from t_rating a
@@ -96,7 +96,7 @@ order by a.rate desc limit 10
 
 --result: 745,750,904,905,1094,1236,1256,1279,2064,2997
 
---=====step2:
+--=====step3:
 select c.MovieName,avg(b.rate) avgrate from t_rating b
 join t_movie c on b.MovieID=c.MovieID
 where b.MovieID in
@@ -118,7 +118,7 @@ order by avgrate desc
 --Crying Game, The (1992)	3.7314890154597236
 
 
---?????????????????????第三题，没想通，下面的写法出来的结果为什么不对，
+--?????????????????????第三题，没想通下面的写法出来的结果为什么不对，
 --去掉`group by y.MovieName`电影还是对的，加上之后变成的其他的电影。
 --测试下来，只要使用聚合函数就不对，比如 distinct，collect_set
 with t1 as(
@@ -169,7 +169,7 @@ select y.MovieName from t_rating x
 join t_movie y on y.MovieID=x.MovieID
 where x.MovieID in(select t2.MovieID from t2)
 
---result:
+--part of result:
 --Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963)
 --Crying Game, The (1992)
 --Being John Malkovich (1999)
@@ -201,34 +201,7 @@ where x.MovieID in(select t2.MovieID from t2)
 --Being John Malkovich (1999)
 --Being John Malkovich (1999)
 --Close Shave, A (1995)
---Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963)
---Roger & Me (1989)
---Rear Window (1954)
---Being John Malkovich (1999)
---Close Shave, A (1995)
---Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963)
---Crying Game, The (1992)
---Roger & Me (1989)
---Being John Malkovich (1999)
---Roger & Me (1989)
---Rear Window (1954)
---Duck Soup (1933)
---Being John Malkovich (1999)
---Crying Game, The (1992)
---Being John Malkovich (1999)
---Close Shave, A (1995)
---Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963)
---Crying Game, The (1992)
---Duck Soup (1933)
---Night on Earth (1991)
---Close Shave, A (1995)
---Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963)
---Crying Game, The (1992)
---Being John Malkovich (1999)
---Rear Window (1954)
---Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb (1963)
---Being John Malkovich (1999)
---Rear Window (1954)
---It Happened One Night (1934)
---Trust (1990)
---Being John Malkovich (1999)
+
+
+-- 最后发现这个用户评分最高的是5分，而他评5分的电影一共有59部，所以这可能是导致结果不同的原因，
+-- 个人理解是不是加了聚合函数导致执行时发生了顺序上的变化。
