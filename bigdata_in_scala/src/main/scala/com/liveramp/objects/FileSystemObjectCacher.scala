@@ -2,6 +2,7 @@ package com.liveramp.objects
 
 import java.net.URI
 
+import com.liveramp.utils.PathUtils
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 

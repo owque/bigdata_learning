@@ -6,57 +6,32 @@ import java.net.URI
 import com.liveramp.objects.{SerializableFileStatus, SingleCopyDefinition}
 import org.apache.hadoop.fs._
 import org.apache.hadoop.io.IOUtils
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory._
 
 import scala.util.{Failure, Success, Try}
 
-object CopyUtils  {
+object CopyUtils {
+
+  val log: Logger = getLogger("=============")
 
   def handleCopy(sourceFS: FileSystem, destFS: FileSystem, definition: SingleCopyDefinition, taskAttemptID: Long): String = {
 
     val r = {
       if (definition.source.isDirectory) {
-        LoggingUtils.log("Info","definition is directory "+definition)
+        log.info("definition is directory " + definition)
         CopyUtils.createDirectory(destFS, definition)
       }
       else if (definition.source.isFile) {
-        LoggingUtils.log("Info","definition is file "+definition)
+        log.info("definition is file " + definition)
         CopyUtils.copyFile(sourceFS, destFS, definition, taskAttemptID)
       }
       else
         throw new UnsupportedOperationException(s"Given file is neither file nor directory. Copy unsupported: ${definition.source.getPath}")
     }
 
-    LoggingUtils.log("Info","handle copy "+r)
+    log.info("handle copy " + r)
     r
-  }
-
-
-  def handleDelete(fs: FileSystem, uri: URI): String = {
-
-
-    val path = new Path(uri)
-
-    val r = deleteFile(fs, path)
-    LoggingUtils.log("Info",r)
-    r
-
-  }
-
-
-  private[utils] def deleteFile(fs: FileSystem, path: Path): String = {
-    if (!fs.exists(path)) {
-      var result:String = s"Path: [$path],delete path,file not exist"
-      result
-    }
-
-    else {
-      Try(fs.delete(path, true)) match {
-        case Success(true) => s"Path: [$path],delete path,success"
-        case Success(false) if !fs.exists(path) => s"Path: [$path],delete path,fail, file not exist"
-        case Success(false) => LoggingUtils.log("Error","delete file",s"Failed to delete directory [$path].")
-        case Failure(e) => LoggingUtils.log("Error","delete file",e.toString)
-      }
-    }
   }
 
 
@@ -64,7 +39,7 @@ object CopyUtils  {
     val destPath = new Path(definition.destination)
     if (destFS.exists(destPath)) {
       var result: String = s"Source: [${definition.source.getPath.toUri}], Destination: [${definition.destination}] ,destination is exist"
-      LoggingUtils.log("Info",result)
+      log.info(result)
       result
     }
     else {
@@ -76,15 +51,16 @@ object CopyUtils  {
         }
         else throw new FileNotFoundException(s"Parent folder [${destPath.getParent}] does not exist.")
       }.recover {
-          case _: FileAlreadyExistsException =>
-            var result: String = s"Source: [${definition.source.getPath.toUri}], Destination: [${definition.destination}] ,file is exist"
-            result
+        case _: FileAlreadyExistsException =>
+          var result: String = s"Source: [${definition.source.getPath.toUri}], Destination: [${definition.destination}] ,file is exist"
+          result
 
-        }
+      }
       result match {
         case Success(v) => v
         case Failure(e) =>
-          LoggingUtils.log("Error",s"Exception whilst creating directory [${definition.destination}]", e.toString)
+          log.error(s"Exception whilst creating directory [${definition.destination}]", e.toString)
+          "error"
       }
     }
   }
@@ -92,17 +68,18 @@ object CopyUtils  {
 
   private[utils] def copyFile(sourceFS: FileSystem, destFS: FileSystem, definition: SingleCopyDefinition, taskAttemptID: Long): String = {
     val destPath = new Path(definition.destination)
-    LoggingUtils.log("Info","start to copy files")
+    log.info("start to copy files")
     Try(destFS.getFileStatus(destPath)) match {
       case Failure(_: FileNotFoundException) =>
-        var filecopy = performCopy(sourceFS, definition.source, destFS, definition.destination, removeExisting = false, taskAttemptID)
-        LoggingUtils.log("Info","fail to copy file " + filecopy)
+        val filecopy = performCopy(sourceFS, definition.source, destFS, definition.destination, removeExisting = false, taskAttemptID)
+        log.info("fail to copy file " + filecopy)
         filecopy
       case Failure(e) =>
-        LoggingUtils.log("Error","fail to  get destination file "+definition.destination,e.toString)
+        log.error("fail to  get destination file " + definition.destination, e.toString)
+        ""
       case Success(_) =>
         performCopy(sourceFS, definition.source, destFS, definition.destination, removeExisting = true, taskAttemptID)
-        var filecopy: String = s"Source: [${definition.source.getPath.toUri}], Destination: [${definition.destination}] ,success to copy file"
+        val filecopy: String = s"Source: [${definition.source.getPath.toUri}], Destination: [${definition.destination}] ,success to copy file"
         filecopy
 
     }
@@ -145,13 +122,14 @@ object CopyUtils  {
         if (!res) throw new RuntimeException(s"Failed to rename temporary file [$tempPath] to [$destPath]")
     } match {
       case Success(_) if removeExisting =>
-        var result: String = s"Source: [${sourceFile.getPath.toUri}], Destination: [${dest}] ,perform copy,remove existing file"
+        val result: String = s"Source: [${sourceFile.getPath.toUri}], Destination: [${dest}] ,perform copy,remove existing file"
         result
       case Success(_) =>
-        var result: String = s"Source: [${sourceFile.getPath.toUri}], Destination: [${dest}] ,perform copy"
+        val result: String = s"Source: [${sourceFile.getPath.toUri}], Destination: [${dest}] ,perform copy"
         result
       case Failure(e) =>
-        LoggingUtils.log("Error",s"Failed to copy file [${sourceFile.getPath}] to [$destPath]", e.toString)
+        log.error(s"Failed to copy file [${sourceFile.getPath}] to [$destPath]", e.toString)
+        "error"
     }
 
   }

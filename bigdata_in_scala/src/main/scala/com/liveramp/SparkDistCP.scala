@@ -8,10 +8,12 @@ import org.apache.hadoop.fs._
 import org.apache.spark.TaskContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory._
 
 
 object SparkDistCP {
-
+  val log: Logger = getLogger("=============")
   type KeyedCopyDefinition = (URI, CopyDefinitionWithDependencies)
 
 
@@ -33,19 +35,19 @@ object SparkDistCP {
     val qualifiedSourcePath = PathUtils.pathToQualifiedPath(sparkSession.sparkContext.hadoopConfiguration, sourcePath)
     val qualifiedDestinationPath = PathUtils.pathToQualifiedPath(sparkSession.sparkContext.hadoopConfiguration, destinationPath)
     val sourceRDD = HandleFileUtils.getFilesFromSourceHadoop(sparkSession.sparkContext, qualifiedSourcePath.toUri, qualifiedDestinationPath.toUri,ParameterUtils.getNumTasks())
-    LoggingUtils.log("Info","source rdd "+sourceRDD.map(x => x.toString).reduce((x, y) => x + "," + y))
+    log.info("source rdd "+sourceRDD.map(x => x.toString).reduce((x, y) => x + "," + y))
     val destinationRDD = HandleFileUtils.getFilesFromDestinationHadoop(sparkSession.sparkContext, qualifiedDestinationPath)
-    LoggingUtils.log("Info","destination rdd "+destinationRDD.map(x => x.toString).reduce((x,y) => x + "," + y))
-    LoggingUtils.log("Info","SparkDistCP tasks number : \n" + sourceRDD.partitions.length)
+    log.info("destination rdd "+destinationRDD.map(x => x.toString).reduce((x,y) => x + "," + y))
+    log.info("SparkDistCP tasks number : \n" + sourceRDD.partitions.length)
     val joined = sourceRDD.fullOuterJoin(destinationRDD)
-    LoggingUtils.log("Info","joined rdd "+joined.map(x => x.toString).reduce((x,y) => x + "," + y))
+    log.info("joined rdd "+joined.map(x => x.toString).reduce((x,y) => x + "," + y))
     val toCopy = joined.collect { case (_, (Some(s), _)) => s }
 
 
     val copyResult: RDD[String] = doCopy(toCopy)
 
     copyResult.foreach(_ => ())
-    LoggingUtils.log("Info","Success to copy files")
+    log.info("Success to copy files")
 
 
 
@@ -57,7 +59,7 @@ object SparkDistCP {
 
     val serConfig = new ConfigSerializableDeser(sourceRDD.sparkContext.hadoopConfiguration)
 
-    LoggingUtils.log("Info","do copy START ")
+    log.info("do copy START ")
     var distcpresult = sourceRDD
       .mapPartitions {
         iterator =>
@@ -74,7 +76,7 @@ object SparkDistCP {
               }
             )
       }
-    LoggingUtils.log("Info","do copy END ")
+    log.info("do copy END ")
     distcpresult
   }
 
