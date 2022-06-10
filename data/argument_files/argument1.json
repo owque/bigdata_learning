@@ -1,0 +1,6 @@
+{
+  "inputFilePath": "./data/input/",
+  "outputPath": "./data/output/result1/",
+  "stateOutputUri": "./data/state/state_20220610.json",
+  "delimiter": "|"
+}

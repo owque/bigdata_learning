@@ -54,7 +54,7 @@ object SparkDistCP {
   }
 
 
-  private[squadron] def doCopy(sourceRDD: RDD[CopyDefinitionWithDependencies]): RDD[String] = {
+  private def doCopy(sourceRDD: RDD[CopyDefinitionWithDependencies]): RDD[String] = {
 
 
     val serConfig = new ConfigSerializableDeser(sourceRDD.sparkContext.hadoopConfiguration)
@@ -80,7 +80,7 @@ object SparkDistCP {
     distcpresult
   }
 
-  private[squadron] implicit class DistCPIteratorImplicit[B](iterator: Iterator[B]) {
+  private implicit class DistCPIteratorImplicit[B](iterator: Iterator[B]) {
 
     def collectMapWithEmptyCollection(skip: (B, Set[B]) => Boolean, action: B => String): Iterator[String] = {
 
