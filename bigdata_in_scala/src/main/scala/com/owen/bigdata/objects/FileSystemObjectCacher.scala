@@ -1,8 +1,8 @@
-package com.liveramp.objects
+package com.owen.bigdata.objects
 
 import java.net.URI
 
-import com.liveramp.utils.PathUtils
+import com.owen.bigdata.utils.PathUtils
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 

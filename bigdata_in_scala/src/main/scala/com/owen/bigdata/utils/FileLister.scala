@@ -1,6 +1,6 @@
-package com.liveramp.utils
+package com.owen.bigdata.utils
 
-import com.liveramp.objects.SerializableFileStatus
+import com.owen.bigdata.objects.SerializableFileStatus
 import org.apache.hadoop.fs.{FileSystem, Path, RemoteIterator}
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory._

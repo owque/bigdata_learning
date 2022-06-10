@@ -1,8 +1,8 @@
-package com.liveramp.objects
+package com.owen.bigdata.objects
 
 import java.net.URI
 
-import com.liveramp.SparkDistCP.KeyedCopyDefinition
+import com.owen.bigdata.SparkDistCP.KeyedCopyDefinition
 
 /**
   * Definition of a single copy

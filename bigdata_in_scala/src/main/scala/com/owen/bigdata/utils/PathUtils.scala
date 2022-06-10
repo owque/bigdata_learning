@@ -1,4 +1,4 @@
-package com.liveramp.utils
+package com.owen.bigdata.utils
 
 import java.net.URI
 

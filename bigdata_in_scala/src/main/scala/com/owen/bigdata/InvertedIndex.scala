@@ -1,7 +1,7 @@
-package com.liveramp
+package com.owen.bigdata
 
-import com.liveramp.v2.BaseLauncher
-import com.liveramp.v2.model.BaseArgument
+import com.owen.bigdata.v2.BaseLauncher
+import com.owen.bigdata.v2.model.BaseArgument
 import org.apache.spark.rdd.RDD
 
 /**

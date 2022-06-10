@@ -1,11 +1,11 @@
-package com.liveramp.v2
+package com.owen.bigdata.v2
 
 import java.net.URI
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.liveramp.utils.HDFS
-import com.liveramp.v2.model.BaseArgument
+import com.owen.bigdata.utils.HDFS
+import com.owen.bigdata.v2.model.BaseArgument
 import org.apache.commons.lang3.StringUtils
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession

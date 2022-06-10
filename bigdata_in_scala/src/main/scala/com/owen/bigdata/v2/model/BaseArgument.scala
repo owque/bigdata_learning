@@ -1,4 +1,4 @@
-package com.liveramp.v2.model
+package com.owen.bigdata.v2.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.apache.commons.lang3.StringUtils

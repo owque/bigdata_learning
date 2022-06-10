@@ -1,4 +1,4 @@
-package com.liveramp.utils
+package com.owen.bigdata.utils
 
 import java.io.{BufferedReader, InputStreamReader}
 import java.net.URI

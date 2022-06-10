@@ -1,9 +1,10 @@
-package com.liveramp.utils
+package com.owen.bigdata.utils
 
 import java.io.FileNotFoundException
 import java.net.URI
 
-import com.liveramp.objects.{SerializableFileStatus, SingleCopyDefinition}
+import com.liveramp.objects.SingleCopyDefinition
+import com.owen.bigdata.objects.{SerializableFileStatus, SingleCopyDefinition}
 import org.apache.hadoop.fs._
 import org.apache.hadoop.io.IOUtils
 import org.slf4j.Logger

@@ -1,4 +1,4 @@
-package com.liveramp.utils
+package com.owen.bigdata.utils
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory._

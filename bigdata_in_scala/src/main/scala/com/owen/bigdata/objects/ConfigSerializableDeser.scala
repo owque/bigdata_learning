@@ -1,4 +1,4 @@
-package com.liveramp.objects
+package com.owen.bigdata.objects
 
 import org.apache.hadoop.conf.Configuration
 
